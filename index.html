@@ -1,0 +1,78 @@
+<script src="https://unpkg.com/moonjs/dist/moon.js"></script>
+
+<style>
+  body {
+    display: grid;
+    grid-gap: 1em;
+    grid-template-colums: 6fr;
+    height: 80%;
+    width: 1280px;
+    color: white;
+    font-family: 'Open Sans', sans-serif;
+  }
+
+
+  h1, h2, h3, h4, h5 {
+    font-family: 'Megrim', cursive;
+  }
+
+  @font-face {
+    font-family: "Open Sans";
+    src: url("/fonts/Open_Sans/OpenSans-Regular.ttf");
+  }
+
+  @font-face {
+    font-family: "Megrim";
+    src: url("/fonts/Megrim/Megrim.ttf");
+  }
+
+  #week {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-column: 5/6;
+    grid-gap: 1em;
+    background-color: salmon;
+  }
+
+  .day {
+    background-color: steelblue;
+  }
+
+  #blocks {
+    grid-column: 6;
+    background-color: lightgreen;
+  }
+
+  .block {
+    margin: 1em;
+    padding: 1em;
+    background-color: lightsalmon;
+  }
+</style>
+
+<body>
+  <div id=week>
+    <section class=day id=monday>
+      <h1>monday</h1>
+    </section>
+    <section class=day id=tuesday>
+      <h1>tuesday</h1>
+    </section>
+    <section class=day id=wednesday>
+      <h1>wednesday</h1>
+    </section>
+    <section class=day id=thursday>
+      <h1>thursday</h1>
+    </section>
+    <section class=day id=friday>
+      <h1>friday</h1>
+    </section>
+  </div>
+
+  <div id=blocks>
+    <section class=block id=japanese>learn japanese</section>
+    <section class=block id=workout>workout</section>
+    <section class=block id=nsf>nsf</section>
+    <section class=block id=smalldata>smalldata</section>
+  </div>
+</body>
