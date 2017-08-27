@@ -48,53 +48,73 @@
     padding: 1em;
     background-color: lightsalmon;
   }
+
+  // Albers!
+  .day .block {
+    background-color: salmon;
+  }
+
 </style>
 
 <script>
+  var counter=0;
   function dragstart_handler(ev) {
-   console.log("dragStart");
-   // Add the target element's id to the data transfer object
    ev.dataTransfer.setData("text/plain", ev.target.id);
    ev.dataTransfer.dropEffect = "copy";
   }
 
   function dragover_handler(ev) {
     ev.preventDefault();
-    // Set the dropEffect to move
-    ev.dataTransfer.dropEffect = "move"
+    ev.dataTransfer.dropEffect = "copy"
   }
 
   function drop_handler(ev) {
     ev.preventDefault();
-   // Get the id of the target and add the moved element to the target's DOM
-    var data = ev.dataTransfer.getData("text");
-    ev.target.appendChild(document.getElementById(data));
+    var id = ev.dataTransfer.getData("text");
+    var nodeCopy = document.getElementById(id).cloneNode(true);
+    nodeCopy.id += counter++;
+    // ALBERRRS!
+//    nodeCopy.css("background-color", "salmon");
+    ev.target.appendChild(nodeCopy);
+  }
+
+  window.onload = function() {
+    var days = Array.from(document.getElementsByClassName('day'));
+    days.forEach(function(day) {
+      day.addEventListener('drop', drop_handler, true);
+      day.addEventListener('dragover', dragover_handler, true);
+    });
+
+    var blocks = Array.from(document.getElementsByClassName('block'));
+    blocks.forEach(function(block) {
+      block.addEventListener('dragstart', dragstart_handler, true);
+    });
   }
 </script>
 
 <body>
   <div id=week>
-    <section ondrop="drop_handler(event);" ondragover="dragover_handler(event);" class=day id=monday>
+    <section class=day id=monday>
       <h1>monday</h1>
     </section>
-    <section ondrop="drop_handler(event);" ondragover="dragover_handler(event);" class=day id=tuesday>
+    <section class=day id=tuesday>
       <h1>tuesday</h1>
     </section>
-    <section ondrop="drop_handler(event);" ondragover="dragover_handler(event);" class=day id=wednesday>
+    <section class=day id=wednesday>
       <h1>wednesday</h1>
     </section>
-    <section ondrop="drop_handler(event);" ondragover="dragover_handler(event);" class=day id=thursday>
+    <section class=day id=thursday>
       <h1>thursday</h1>
     </section>
-    <section ondrop="drop_handler(event);" ondragover="dragover_handler(event);" class=day id=friday>
+    <section class=day id=friday>
       <h1>friday</h1>
     </section>
   </div>
 
   <div id=blocks>
-    <section ondragstart="dragstart_handler(event);" draggable=true class=block id=japanese>learn japanese</section>
-    <section ondragstart="dragstart_handler(event);" draggable=true class=block id=workout>workout</section>
-    <section ondragstart="dragstart_handler(event);" draggable=true class=block id=nsf>nsf</section>
-    <section ondragstart="dragstart_handler(event);" draggable=true class=block id=smalldata>smalldata</section>
+    <section draggable=true class=block id=japanese>learn japanese</section>
+    <section draggable=true class=block id=workout>workout</section>
+    <section draggable=true class=block id=nsf>nsf</section>
+    <section draggable=true class=block id=smalldata>smalldata</section>
   </div>
 </body>
