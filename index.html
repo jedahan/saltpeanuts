@@ -49,43 +49,43 @@
     background-color: lightsalmon;
   }
 
-  // Albers!
-  .day .block {
-    background-color: salmon;
-  }
-
 </style>
 
 <script>
   var counter=0;
   function dragstart_handler(ev) {
-   ev.dataTransfer.setData("text/plain", ev.target.id);
-   ev.dataTransfer.dropEffect = "copy";
+    ev.dataTransfer.setData("text/plain", ev.target.id);
+    ev.dataTransfer.dropEffect = "copy";
   }
 
   function dragover_handler(ev) {
-    ev.preventDefault();
+//    ev.preventDefault();
     ev.dataTransfer.dropEffect = "copy"
   }
 
   function drop_handler(ev) {
-    ev.preventDefault();
+//    ev.preventDefault();
+    console.log('aaa');
     var id = ev.dataTransfer.getData("text");
+    console.log('aa');
     var nodeCopy = document.getElementById(id).cloneNode(true);
+    console.log('a');
     nodeCopy.id += counter++;
-    // ALBERRRS!
-//    nodeCopy.css("background-color", "salmon");
+    console.log('b');
     ev.target.appendChild(nodeCopy);
+    console.log('c');
   }
 
   window.onload = function() {
     var days = Array.from(document.getElementsByClassName('day'));
+    console.log('days are', days);
     days.forEach(function(day) {
       day.addEventListener('drop', drop_handler, true);
       day.addEventListener('dragover', dragover_handler, true);
     });
 
     var blocks = Array.from(document.getElementsByClassName('block'));
+    console.log('blocks are', blocks);
     blocks.forEach(function(block) {
       block.addEventListener('dragstart', dragstart_handler, true);
     });
