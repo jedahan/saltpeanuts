@@ -5,14 +5,21 @@
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
     <style>
+      html,
+      body {
+        height: 90%;
+        max-height: 800px;
+      }
+
       body {
         display: grid;
         grid-gap: 1em;
         grid-template-columns: 2fr;
-        height: 80%;
         width: 1280px;
         color: white;
         font-family: 'Open Sans', sans-serif;
+        margin-left: auto;
+        margin-right: auto;
       }
 
 
@@ -37,6 +44,7 @@
         grid-column: 1/2;
         grid-gap: 1em;
         background-color: salmon;
+        height: 100%;
       }
 
       .day {
@@ -93,7 +101,6 @@
   </head>
 
   <body>
-    help
     <div id=week>
       <section class=day id=monday>
         <h1>monday</h1>
