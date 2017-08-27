@@ -50,29 +50,51 @@
   }
 </style>
 
+<script>
+  function dragstart_handler(ev) {
+   console.log("dragStart");
+   // Add the target element's id to the data transfer object
+   ev.dataTransfer.setData("text/plain", ev.target.id);
+   ev.dataTransfer.dropEffect = "copy";
+  }
+
+  function dragover_handler(ev) {
+    ev.preventDefault();
+    // Set the dropEffect to move
+    ev.dataTransfer.dropEffect = "move"
+  }
+
+  function drop_handler(ev) {
+    ev.preventDefault();
+   // Get the id of the target and add the moved element to the target's DOM
+    var data = ev.dataTransfer.getData("text");
+    ev.target.appendChild(document.getElementById(data));
+  }
+</script>
+
 <body>
   <div id=week>
-    <section class=day id=monday>
+    <section ondrop="drop_handler(event);" ondragover="dragover_handler(event);" class=day id=monday>
       <h1>monday</h1>
     </section>
-    <section class=day id=tuesday>
+    <section ondrop="drop_handler(event);" ondragover="dragover_handler(event);" class=day id=tuesday>
       <h1>tuesday</h1>
     </section>
-    <section class=day id=wednesday>
+    <section ondrop="drop_handler(event);" ondragover="dragover_handler(event);" class=day id=wednesday>
       <h1>wednesday</h1>
     </section>
-    <section class=day id=thursday>
+    <section ondrop="drop_handler(event);" ondragover="dragover_handler(event);" class=day id=thursday>
       <h1>thursday</h1>
     </section>
-    <section class=day id=friday>
+    <section ondrop="drop_handler(event);" ondragover="dragover_handler(event);" class=day id=friday>
       <h1>friday</h1>
     </section>
   </div>
 
   <div id=blocks>
-    <section class=block id=japanese>learn japanese</section>
-    <section class=block id=workout>workout</section>
-    <section class=block id=nsf>nsf</section>
-    <section class=block id=smalldata>smalldata</section>
+    <section ondragstart="dragstart_handler(event);" draggable=true class=block id=japanese>learn japanese</section>
+    <section ondragstart="dragstart_handler(event);" draggable=true class=block id=workout>workout</section>
+    <section ondragstart="dragstart_handler(event);" draggable=true class=block id=nsf>nsf</section>
+    <section ondragstart="dragstart_handler(event);" draggable=true class=block id=smalldata>smalldata</section>
   </div>
 </body>
