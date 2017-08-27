@@ -1,120 +1,122 @@
-<script src="//js/moon@0.11.js"></script>
+<!doctype html>
+<html>
+  <head>
+    <script src="js/moonjs@0.11.js"></script>
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
-<style>
-  body {
-    display: grid;
-    grid-gap: 1em;
-    grid-template-colums: 6fr;
-    height: 80%;
-    width: 1280px;
-    color: white;
-    font-family: 'Open Sans', sans-serif;
-  }
+    <style>
+      body {
+        display: grid;
+        grid-gap: 1em;
+        grid-template-columns: 2fr;
+        height: 80%;
+        width: 1280px;
+        color: white;
+        font-family: 'Open Sans', sans-serif;
+      }
 
 
-  h1, h2, h3, h4, h5 {
-    font-family: 'Megrim', cursive;
-  }
+      h1, h2, h3, h4, h5 {
+        font-family: 'Megrim', cursive;
+        text-align: center;
+      }
 
-  @font-face {
-    font-family: "Open Sans";
-    src: url("/fonts/Open_Sans/OpenSans-Regular.ttf");
-  }
+      @font-face {
+        font-family: "Open Sans";
+        src: url("/fonts/Open_Sans/OpenSans-Regular.ttf");
+      }
 
-  @font-face {
-    font-family: "Megrim";
-    src: url("/fonts/Megrim/Megrim.ttf");
-  }
+      @font-face {
+        font-family: "Megrim";
+        src: url("/fonts/Megrim/Megrim.ttf");
+      }
 
-  #week {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-column: 5/6;
-    grid-gap: 1em;
-    background-color: salmon;
-  }
+      #week {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        grid-column: 1/2;
+        grid-gap: 1em;
+        background-color: salmon;
+      }
 
-  .day {
-    background-color: steelblue;
-  }
+      .day {
+        background-color: steelblue;
+      }
 
-  #blocks {
-    grid-column: 6;
-    background-color: lightgreen;
-  }
+      #blocks {
+        grid-column: 2/2;
+        background-color: lightgreen;
+      }
 
-  .block {
-    margin: 1em;
-    padding: 1em;
-    background-color: lightsalmon;
-  }
+      .block {
+        margin: 1em;
+        padding: 1em;
+        background-color: lightsalmon;
+      }
+    </style>
 
-</style>
+    <script>
+      var counter=0;
+      function dragstart_handler(ev) {
+        ev.dataTransfer.setData("text/plain", ev.target.id);
+        ev.dataTransfer.dropEffect = "copy";
+      }
 
-<script>
-  var counter=0;
-  function dragstart_handler(ev) {
-    ev.dataTransfer.setData("text/plain", ev.target.id);
-    ev.dataTransfer.dropEffect = "copy";
-  }
+      function dragover_handler(ev) {
+        ev.dataTransfer.dropEffect = "copy"
+        // alberrrrs!
+        ev.preventDefault();
+      }
 
-  function dragover_handler(ev) {
-//    ev.preventDefault();
-    ev.dataTransfer.dropEffect = "copy"
-  }
+      function drop_handler(ev) {
+        ev.preventDefault();
+        var id = ev.dataTransfer.getData("text");
+        var nodeCopy = document.getElementById(id).cloneNode(true);
+        nodeCopy.id += counter++;
+        nodeCopy.style.background = "salmon";
+        ev.target.appendChild(nodeCopy);
+      }
 
-  function drop_handler(ev) {
-//    ev.preventDefault();
-    console.log('aaa');
-    var id = ev.dataTransfer.getData("text");
-    console.log('aa');
-    var nodeCopy = document.getElementById(id).cloneNode(true);
-    console.log('a');
-    nodeCopy.id += counter++;
-    console.log('b');
-    ev.target.appendChild(nodeCopy);
-    console.log('c');
-  }
+      window.onload = function() {
+        let days = Array.from(document.getElementsByClassName('day'));
+        days.forEach(function(day) {
+          day.addEventListener('dragover', dragover_handler, true);
+          day.addEventListener('drop', drop_handler, true);
+        });
 
-  window.onload = function() {
-    var days = Array.from(document.getElementsByClassName('day'));
-    console.log('days are', days);
-    days.forEach(function(day) {
-      day.addEventListener('drop', drop_handler, true);
-      day.addEventListener('dragover', dragover_handler, true);
-    });
+        let blocks = Array.from(document.getElementsByClassName('block'));
+        blocks.forEach(function(block) {
+          block.addEventListener('dragstart', dragstart_handler, true);
+        });
+      }
+    </script>
+  </head>
 
-    var blocks = Array.from(document.getElementsByClassName('block'));
-    console.log('blocks are', blocks);
-    blocks.forEach(function(block) {
-      block.addEventListener('dragstart', dragstart_handler, true);
-    });
-  }
-</script>
+  <body>
+    help
+    <div id=week>
+      <section class=day id=monday>
+        <h1>monday</h1>
+      </section>
+      <section class=day id=tuesday>
+        <h1>tuesday</h1>
+      </section>
+      <section class=day id=wednesday>
+        <h1>wednesday</h1>
+      </section>
+      <section class=day id=thursday>
+        <h1>thursday</h1>
+      </section>
+      <section class=day id=friday>
+        <h1>friday</h1>
+      </section>
+    </div>
 
-<body>
-  <div id=week>
-    <section class=day id=monday>
-      <h1>monday</h1>
-    </section>
-    <section class=day id=tuesday>
-      <h1>tuesday</h1>
-    </section>
-    <section class=day id=wednesday>
-      <h1>wednesday</h1>
-    </section>
-    <section class=day id=thursday>
-      <h1>thursday</h1>
-    </section>
-    <section class=day id=friday>
-      <h1>friday</h1>
-    </section>
-  </div>
-
-  <div id=blocks>
-    <section draggable=true class=block id=japanese>learn japanese</section>
-    <section draggable=true class=block id=workout>workout</section>
-    <section draggable=true class=block id=nsf>nsf</section>
-    <section draggable=true class=block id=smalldata>smalldata</section>
-  </div>
-</body>
+    <div id=blocks>
+      <section draggable=true class=block id=japanese>learn japanese</section>
+      <section draggable=true class=block id=workout>workout</section>
+      <section draggable=true class=block id=nsf>nsf</section>
+      <section draggable=true class=block id=smalldata>smalldata</section>
+    </div>
+  </body>
+</html>
