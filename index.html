@@ -67,23 +67,51 @@
     <script>
       var counter=0;
       function dragstart_handler(ev) {
-        ev.dataTransfer.setData("text/plain", ev.target.id);
+        ev.dataTransfer.setData("text/plain", ev.target.textContent);
         ev.dataTransfer.dropEffect = "copy";
+        ev.target.dataset.dragging = 'true';
       }
 
       function dragover_handler(ev) {
         ev.dataTransfer.dropEffect = "copy"
-        // alberrrrs!
         ev.preventDefault();
+      }
+
+      function click_to_delete_handler(ev) {
+        ev.preventDefault();
+        ev.target.parentNode.removeChild(ev.target);
+      }
+
+      function click_to_edit_or_drag(ev) {
+        if (ev.target.dataset.dragging == 'true') {
+          return;
+        }
+        ev.target.setAttribute('draggable', 'false');
+        ev.target.setAttribute('contenteditable', 'true');
+        ev.preventDefault();
+      }
+
+      function blur_handler(ev) {
+        ev.target.setAttribute('draggable', 'true');
+        ev.target.setAttribute('contenteditable', 'false');
+        ev.preventDefault();
+      }
+
+      function dragend_handler(ev) {
+        ev.target.dataset.dragging = 'false';
       }
 
       function drop_handler(ev) {
         ev.preventDefault();
-        var id = ev.dataTransfer.getData("text");
-        var nodeCopy = document.getElementById(id).cloneNode(true);
-        nodeCopy.id += counter++;
-        nodeCopy.style.background = "salmon";
-        ev.target.appendChild(nodeCopy);
+        var text = ev.dataTransfer.getData("text");
+        var textNode = document.createTextNode(text);
+        var blockNode = document.createElement('section');
+        blockNode.appendChild(textNode);
+        blockNode.className = 'block';
+        blockNode.id = counter++;
+        blockNode.style.background = 'salmon'; // alberrrrs!
+        blockNode.addEventListener('click', click_to_delete_handler, true);
+        ev.target.appendChild(blockNode);
       }
 
       window.onload = function() {
@@ -96,6 +124,9 @@
         let blocks = Array.from(document.getElementsByClassName('block'));
         blocks.forEach(function(block) {
           block.addEventListener('dragstart', dragstart_handler, true);
+          block.addEventListener('click', click_to_edit_or_drag, true);
+          block.addEventListener('blur', blur_handler, true);
+          block.addEventListener('dragend', dragend_handler, true);
         });
       }
     </script>
@@ -121,10 +152,10 @@
     </div>
 
     <div id=blocks>
-      <section draggable=true class=block id=japanese>learn japanese</section>
-      <section draggable=true class=block id=workout>workout</section>
-      <section draggable=true class=block id=nsf>nsf</section>
-      <section draggable=true class=block id=smalldata>smalldata</section>
+      <section contenteditable=true draggable=true class=block>learn japanese</section>
+      <section contenteditable=true draggable=true class=block>workout</section>
+      <section contenteditable=true draggable=true class=block>nsf</section>
+      <section contenteditable=true draggable=true class=block>smalldata</section>
     </div>
   </body>
 </html>
