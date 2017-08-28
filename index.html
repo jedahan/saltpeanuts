@@ -67,14 +67,14 @@
     <script>
       var counter=0;
       function dragstart_handler(ev) {
+        ev.target.dataset.dragging = 'true';
         ev.dataTransfer.setData("text/plain", ev.target.textContent);
         ev.dataTransfer.dropEffect = "copy";
-        ev.target.dataset.dragging = 'true';
       }
 
       function dragover_handler(ev) {
-        ev.dataTransfer.dropEffect = "copy"
         ev.preventDefault();
+        ev.dataTransfer.dropEffect = "copy"
       }
 
       function click_to_delete_handler(ev) {
@@ -84,7 +84,7 @@
 
       function click_to_edit_or_drag(ev) {
         if (ev.target.dataset.dragging == 'true') {
-          return;
+            return;
         }
         ev.target.setAttribute('draggable', 'false');
         ev.target.setAttribute('contenteditable', 'true');
@@ -94,15 +94,14 @@
       function blur_handler(ev) {
         ev.target.setAttribute('draggable', 'true');
         ev.target.setAttribute('contenteditable', 'false');
-        ev.preventDefault();
       }
 
       function dragend_handler(ev) {
         ev.target.dataset.dragging = 'false';
+        ev.preventDefault();
       }
 
       function drop_handler(ev) {
-        ev.preventDefault();
         var text = ev.dataTransfer.getData("text");
         var textNode = document.createTextNode(text);
         var blockNode = document.createElement('section');
@@ -112,6 +111,7 @@
         blockNode.style.background = 'salmon'; // alberrrrs!
         blockNode.addEventListener('click', click_to_delete_handler, true);
         ev.target.appendChild(blockNode);
+        ev.preventDefault();
       }
 
       window.onload = function() {
