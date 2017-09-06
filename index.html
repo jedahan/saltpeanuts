@@ -1,139 +1,43 @@
 <!doctype html>
 <html>
   <head>
-    <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <script src="https://unpkg.com/vue"></script>
-
-    <style>
-      html {
-        height: 90%;
-        max-height: 800px;
-        background-color: lightyellow;
-      }
-
-      #app {
-        height: 100%;
-        display: grid;
-        grid-gap: 1em;
-        grid-template-columns: 2fr;
-        width: 1280px;
-        color: white;
-        font-family: 'Open Sans', sans-serif;
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-
-      h1, h2, h3, h4, h5 {
-        font-family: 'Megrim', cursive;
-        text-align: center;
-      }
-
-      @font-face {
-        font-family: "Open Sans";
-        src: url("fonts/Open_Sans/OpenSans-Regular.ttf");
-      }
-
-      @font-face {
-        font-family: "Megrim";
-        src: url("fonts/Megrim/Megrim.ttf");
-      }
-
-      #week {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        grid-column: 1/2;
-        grid-gap: 1em;
-        background-color: salmon;
-        height: 100%;
-      }
-
-      .day {
-        background-color: steelblue;
-      }
-
-      #blocks {
-        grid-column: 2/2;
-        background-color: lightgreen;
-      }
-
-      .block {
-        margin: 1em;
-        padding: 1em;
-        background-color: lightsalmon;
-      }
-    </style>
 
     <script>
       window.onload = function() {
         const data = {
           blocks: [ 'study japanese', 'email', 'mozilla/nsf', 'click me!', 'elusive index 4' ],
-          schedule: {
-            monday: [1, 0, 0, 4],
-            tuesday: [4, 4, 4, 4],
-            wednesday: [],
-            thursday: [],
-            friday: [],
-          },
-          temp: {
-            dragtext: null, // text of the block being dragged
-            edittext: null, // text of the block being edited
-          }
+          schedule: [1, 0, 0, 4, 2, 2, 2],
+          edittext: null,
         };
         Vue.component('block', {
           props: ['index'],
-          template: `<div class=block
-            contenteditable
-            draggable
-            :inner-html=label
-            @keydown.enter.prevent
-            @blur=blur
-            @input=edit
-            @focus=editstart
-            @dragstart=dragstart>{{ label }}</div>`,
+          template: `<div class=block contenteditable @input=input @focus=focus>{{ label }}</div>`,
+          data() { return data },
           computed: {
             label() {
               return data.blocks[this.index];
             }
           },
-          data() { return data },
           methods: {
-            editstart({target}) {
-              data.temp.edittext = target.textContent;
+            focus({target}) {
+              data.edittext = target.textContent;
             },
-            edit({target}) {
-              this.editing = true;
+            input({target}) {
               data.blocks = data.blocks.map(function(block) {
-                if (block == data.temp.edittext) {
+                if (block === data.edittext) {
                   return target.textContent;
                 } else {
                   return block;
                 }
               });
-              data.temp.edittext = target.textContent;
-            },
-            blur() {
-              data.temp.edittext = null;
-            },
-            dragstart({target}) {
-              data.temp.dragtext = target.textContent;
+              data.edittext = target.textContent;
             },
           }
         });
         const app = new Vue({
           el: '#app',
           data: data,
-          methods: {
-            drop({target}) {
-              const blockText = data.temp.dragtext;
-              const blockIndex = data.blocks.indexOf(blockText);
-
-              const dayText = target.textContent.trim();
-
-              data.schedule[dayText] = data.schedule[dayText].concat(blockIndex);
-              data.temp.dragtext = null;
-            }
-          }
         });
       }
     </script>
@@ -141,16 +45,11 @@
 
   <body>
     <div id=app>
-      <div id=week>
-        <section class=day @dragover.prevent @drop="drop" v-for="(day, dayName) in schedule">
-          <h1>{{ dayName }}</h1>
-          <block v-for="blockIndex in day" :index="blockIndex"></block>
-        </section>
-      </div>
+      <h2>schedule</h2>
+      <block v-for="blockIndex in schedule" :index="blockIndex"></block>
 
-      <div id=blocks>
-        <block v-for="(block, blockIndex) in blocks" :index="blockIndex"></block>
-      </div>
+      <h2>blocks</h2>
+      <block v-for="(block, blockIndex) in blocks" :index="blockIndex"></block>
     </div>
   </body>
 </html>
