@@ -118,6 +118,17 @@
             dragstart({target}) {
               data.temp.dragtext = target.textContent;
             },
+            // horrid hack to move the cursor to the right place
+            beforeUpdate() {
+              const range = window.getSelection().getRangeAt(0)
+              if (this.$el === range.startContainer.parentNode) {
+              data.offset = range.startOffset;
+                this.$nextTick(function() {
+                  const range = window.getSelection().getRangeAt(0);
+                  range.setStart(this.$el.firstChild, data.offset);
+                });
+              }
+            },
           }
         });
         const app = new Vue({
