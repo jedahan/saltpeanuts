@@ -78,6 +78,7 @@
           temp: {
             dragtext: null, // text of the block being dragged
             edittext: null, // text of the block being edited
+            offset: null,   // offset to fix contenteditable caret
           }
         };
         Vue.component('block', {
@@ -97,6 +98,17 @@
             }
           },
           data() { return data },
+          // horrid hack to move the cursor to the right place
+          beforeUpdate() {
+            const range = window.getSelection().getRangeAt(0);
+            if (this.$el === range.startContainer.parentNode) {
+              data.temp.offset = range.startOffset;
+              this.$nextTick(function() {
+                const range = window.getSelection().getRangeAt(0);
+                range.setStart(this.$el.firstChild, data.temp.offset);
+              });
+            }
+          },
           methods: {
             editstart({target}) {
               data.temp.edittext = target.textContent;
