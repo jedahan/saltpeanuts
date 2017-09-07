@@ -1,0 +1,57 @@
+html {
+  height: 90%;
+  max-height: 800px;
+  background-color: lightyellow;
+}
+
+#app {
+  height: 100%;
+  display: grid;
+  grid-gap: 1em;
+  grid-template-columns: 2fr;
+  width: 1280px;
+  color: white;
+  font-family: 'Open Sans', sans-serif;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Megrim', cursive;
+  text-align: center;
+}
+
+@font-face {
+  font-family: "Open Sans";
+  src: url("fonts/Open_Sans/OpenSans-Regular.ttf");
+}
+
+@font-face {
+  font-family: "Megrim";
+  src: url("fonts/Megrim/Megrim.ttf");
+}
+
+#week {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  grid-column: 1/2;
+  grid-gap: 1em;
+  background-color: salmon;
+  height: 100%;
+}
+
+.day {
+  background-color: steelblue;
+}
+
+#blocks {
+  grid-column: 2/2;
+  background-color: lightgreen;
+}
+
+.block {
+  margin: 1em;
+  padding: 1em;
+  background-color: lightsalmon;
+}
