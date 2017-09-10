@@ -15,7 +15,7 @@ window.onload = function() {
     }
   };
   Vue.component('block', {
-    props: ['index'],
+    props: ['blockIndex', 'dayIndex'],
     template: `<div class=block
       contenteditable
       draggable
@@ -24,10 +24,11 @@ window.onload = function() {
       @blur=blur
       @input=edit
       @focus=editstart
+      @dragover=dragover
       @dragstart=dragstart>{{label}}</div>`,
     computed: {
       label() {
-        return data.blocks[this.index];
+        return data.blocks[this.blockIndex];
       }
     },
     data() { return data },
@@ -63,19 +64,30 @@ window.onload = function() {
       dragstart({target}) {
         data.temp.dragtext = target.textContent;
       },
+      dragover({target}) {
+        data.temp.dragoverIndex = this.dayIndex;
+      }
     }
   });
   const app = new Vue({
     el: '#app',
     data: data,
     methods: {
-      drop({target}) {
+      drop({target, y}) {
         const blockText = data.temp.dragtext;
         const blockIndex = data.blocks.indexOf(blockText);
+        const indexAfter = Array.from(target.children)
+          .findIndex(element => element.offsetTop >= y);
 
-        const dayText = target.textContent.trim();
+        console.log(indexAfter);
 
-        data.schedule[dayText] = data.schedule[dayText].concat(blockIndex);
+        const dayText = target.firstChild.textContent.trim();
+        const schedule = data.schedule[dayText];
+        const before = schedule.slice(0, indexAfter - 1);
+        const after = schedule.slice(indexAfter - 1);
+        const sched = before.concat([blockIndex]).concat(after);
+
+        data.schedule[dayText] = sched;
         data.temp.dragtext = null;
       }
     }

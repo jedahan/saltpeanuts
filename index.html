@@ -14,12 +14,12 @@
       <div id=week>
         <section class=day @dragover.prevent @drop="drop" v-for="day,dayName in schedule">
           <h1>{{ dayName }}</h1>
-          <block v-for="blockIndex in day" :index="blockIndex"></block>
+          <block v-for="blockIndex,dayIndex in day" :block-index="blockIndex" :day-index="dayIndex" ></block>
         </section>
       </div>
 
       <div id=blocks>
-        <block v-for="block,blockIndex in blocks" :index="blockIndex"></block>
+        <block v-for="block,blockIndex in blocks" :block-index="blockIndex"></block>
       </div>
     </div>
   </body>
