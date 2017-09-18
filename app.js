@@ -1,5 +1,6 @@
 window.onload = function() {
-  const data = {
+  const data = JSON.parse(localStorage.getItem('saltpeanuts')) || {
+    updated: Date.now(),
     blocks: [ 'study japanese', 'email', 'mozilla/nsf', 'click me!', 'elusive index 4' ],
     schedule: {
       monday: [1, 0, 0, 4],
@@ -14,6 +15,13 @@ window.onload = function() {
       offset: null,   // offset to fix contenteditable caret
     }
   };
+
+  window.setInterval(function() {
+    data.updated = Date.now();
+    localStorage.setItem('saltpeanuts', JSON.stringify(data));
+    console.log(`saved data at ${data.updated}`);
+  }, 5000 );
+
   Vue.component('block', {
     props: ['blockIndex', 'dayIndex'],
     template: `<div class=block
@@ -73,6 +81,10 @@ window.onload = function() {
     el: '#app',
     data: data,
     methods: {
+      dblclick({target}) {
+        const dayText = target.textContent.trim();
+        data.schedule[dayText] = [];
+      },
       drop({target, y}) {
         const blockText = data.temp.dragtext;
         const blockIndex = data.blocks.indexOf(blockText);
