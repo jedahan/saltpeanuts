@@ -1,26 +1,36 @@
 window.onload = function() {
-  const data = JSON.parse(localStorage.getItem('saltpeanuts')) || {
-    updated: Date.now(),
-    blocks: [ 'study japanese', 'email', 'mozilla/nsf', 'click me!', 'elusive index 4' ],
-    schedule: {
-      monday: [1, 0, 0, 4],
-      tuesday: [4, 4, 4, 4],
-      wednesday: [],
-      thursday: [],
-      friday: [],
-    },
-    temp: {
-      dragtext: null, // text of the block being dragged
-      edittext: null, // text of the block being edited
-      offset: null,   // offset to fix contenteditable caret
-    }
-  };
+  const data = (() => {
+    const hash = rison.decode_object(decodeURI(window.location.hash.substring(1)));
+    if (hash.updated > 0) { return hash; }
+
+    const local = rison.decode_object(localStorage.getItem('saltpeanuts') || '');
+    if (local.updated > 0) { return local; }
+
+    return {
+      updated: Date.now(),
+      blocks: [ 'study japanese', 'email', 'mozilla/nsf', 'click me!', 'elusive index 4' ],
+      schedule: {
+        monday: [1, 0, 0, 4],
+        tuesday: [4, 4, 4, 4],
+        wednesday: [],
+        thursday: [],
+        friday: [],
+      },
+      temp: {
+        dragtext: null, // text of the block being dragged
+        edittext: null, // text of the block being edited
+        offset: null,   // offset to fix contenteditable caret
+      }
+    };
+  })();
 
   window.setInterval(function() {
     data.updated = Date.now();
-    localStorage.setItem('saltpeanuts', JSON.stringify(data));
-    console.log(`saved data at ${data.updated}`);
-  }, 5000 );
+    const datastring = rison.encode_object(data);
+
+    localStorage.setItem('saltpeanuts', datastring);
+    window.location.hash = datastring;
+  }, 2000 );
 
   Vue.component('block', {
     props: ['blockIndex', 'dayIndex'],
