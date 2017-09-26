@@ -7,7 +7,7 @@ window.onload = function() {
     if (local.updated > 0) { return local; }
 
     return {
-      updated: Date.now(),
+      updated: new Date(),
       blocks: [ 'study japanese', 'email', 'mozilla/nsf', 'click me!', 'elusive index 4' ],
       schedule: {
         monday: [1, 0, 0, 4],
@@ -25,7 +25,7 @@ window.onload = function() {
   })();
 
   window.setInterval(function() {
-    data.updated = Date.now();
+    data.updated = new Date();
     const datastring = rison.encode_object(data);
 
     localStorage.setItem('saltpeanuts', datastring);
@@ -33,21 +33,32 @@ window.onload = function() {
   }, 2000 );
 
   Vue.component('block', {
-    props: ['blockIndex', 'dayIndex'],
-    template: `<div class=block
+    props: ['labelIndex', 'blockIndex', 'dayName'],
+    template: `<div v-bind:class="{ block: true, current: isCurrent }"
       contenteditable
       draggable
       :inner-text=label
-      @keydown.enter.prevent
       @blur=blur
       @input=edit
       @focus=editstart
-      @dragover=dragover
       @dragstart=dragstart>{{label}}</div>`,
     computed: {
       label() {
-        return data.blocks[this.blockIndex];
-      }
+        return data.blocks[this.labelIndex];
+      },
+      dayIndex() {
+        const days = Object.keys(data.schedule);
+        return days.findIndex(day => day === this.dayName);
+      },
+      isCurrent() {
+        const currentDay = data.updated.getDay() - 1;
+        const currentBlock = data.updated.getHours() - 10;
+
+        if (this.labelIndex) {
+          return this.blockIndex === currentBlock &&
+                 this.dayIndex === currentDay;
+        }
+      },
     },
     data() { return data },
     // horrid hack to move the cursor to the right place
@@ -82,9 +93,6 @@ window.onload = function() {
       dragstart({target}) {
         data.temp.dragtext = target.textContent;
       },
-      dragover({target}) {
-        data.temp.dragoverIndex = this.dayIndex;
-      }
     }
   });
   const app = new Vue({
@@ -97,21 +105,19 @@ window.onload = function() {
       },
       drop({target, y}) {
         const blockText = data.temp.dragtext;
-        const blockIndex = data.blocks.indexOf(blockText);
+        const labelIndex = data.blocks.indexOf(blockText);
         const indexAfter = Array.from(target.children)
           .findIndex(element => element.offsetTop >= y);
-
-        console.log(indexAfter);
 
         const dayText = target.firstChild.textContent.trim();
         const schedule = data.schedule[dayText];
         const before = schedule.slice(0, indexAfter - 1);
         const after = schedule.slice(indexAfter - 1);
-        const sched = before.concat([blockIndex]).concat(after);
+        const sched = before.concat([labelIndex]).concat(after);
 
         data.schedule[dayText] = sched;
         data.temp.dragtext = null;
       }
-    }
+    },
   });
 }
